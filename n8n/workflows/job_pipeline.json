@@ -1,0 +1,112 @@
+{
+  "name": "AI Job Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 9,
+              "minute": 0
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:8000/jobs",
+        "method": "GET"
+      },
+      "name": "Fetch Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:8000/score",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "{ \"job_description\": \"={{$json[\"description\"]}}\", \"profile\": \"={{$env.LINKEDIN_PROFILE}}\" }"
+      },
+      "name": "Score Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json[\"score\"]}}",
+              "operation": "largerEqual",
+              "value2": "={{$env.JOB_SCORE_THRESHOLD}}"
+            }
+          ]
+        }
+      },
+      "name": "Filter Score",
+      "type": "n8n-nodes-base.if",
+      "position": [950, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:8000/generate-resume",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "{ \"linkedin_profile\": \"={{$env.LINKEDIN_PROFILE}}\", \"current_resume\": \"\", \"job_description\": \"={{$json[\"description\"]}}\" }"
+      },
+      "name": "Generate Resume",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1200, 200]
+    },
+    {
+      "parameters": {
+        "url": "http://backend:8000/generate-cover-letter",
+        "method": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "{ \"company\": \"={{$json[\"company\"]}}\", \"role\": \"={{$json[\"title\"]}}\", \"resume_text\": \"={{$node[\"Generate Resume\"].json[\"resume\"]}}\", \"job_description\": \"={{$json[\"description\"]}}\" }"
+      },
+      "name": "Generate Cover Letter",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "chatId": "={{$env.TELEGRAM_CHAT_ID}}",
+        "text": "🚀 *High Match Job*\n\nCompany: {{$json[\"company\"]}}\nRole: {{$json[\"title\"]}}\nScore: {{$json[\"score\"]}}\n\nApply here:\n{{$json[\"url\"]}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "position": [1700, 300]
+    }
+  ],
+  "connections": {
+    "Cron": {
+      "main": [[{ "node": "Fetch Jobs", "type": "main", "index": 0 }]]
+    },
+    "Fetch Jobs": {
+      "main": [[{ "node": "Score Job", "type": "main", "index": 0 }]]
+    },
+    "Score Job": {
+      "main": [[{ "node": "Filter Score", "type": "main", "index": 0 }]]
+    },
+    "Filter Score": {
+      "main": [
+        [{ "node": "Generate Resume", "type": "main", "index": 0 }]
+      ]
+    },
+    "Generate Resume": {
+      "main": [[{ "node": "Generate Cover Letter", "type": "main", "index": 0 }]]
+    },
+    "Generate Cover Letter": {
+      "main": [[{ "node": "Telegram Alert", "type": "main", "index": 0 }]]
+    }
+  }
+}

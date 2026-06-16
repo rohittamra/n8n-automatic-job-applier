@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jobs</title>
+</head>
+<body>
+
+<h2>Jobs</h2>
+
+<table border="1">
+<tr>
+<th>Company</th>
+<th>Role</th>
+<th>Score</th>
+</tr>
+
+<tbody id="jobs"></tbody>
+
+</table>
+
+<script>
+
+fetch("http://localhost:8000/jobs")
+.then(r => r.json())
+.then(data => {
+
+    let html = "";
+
+    data.forEach(job => {
+
+        html += `
+        <tr>
+            <td>${job.company}</td>
+            <td>${job.title}</td>
+            <td>${job.score}</td>
+        </tr>
+        `;
+
+    });
+
+    document.getElementById("jobs").innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>
