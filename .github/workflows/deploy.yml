@@ -46,14 +46,18 @@ jobs:
 
       - name: Inject sample job
         run: |
+          mkdir -p backend/files
           touch backend/files/jobs.json
-          echo '[{
+
+          echo '[
+            {
               "title": "AI Engineer",
               "company": "OpenAI",
               "url": "https://example.com",
               "description": "Python, LLMs, Kubernetes",
               "score": 95
-            }]' > backend/files/jobs.json
+            }
+          ]' > backend/files/jobs.json
 
       - name: Generate documents
         run: |
