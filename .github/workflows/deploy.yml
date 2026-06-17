@@ -46,17 +46,15 @@ jobs:
 
       - name: Inject sample job
         run: |
-          echo '[
-            {
+          touch backend/files/jobs.json
+          echo '[{
               "title": "AI Engineer",
               "company": "OpenAI",
               "url": "https://example.com",
               "description": "Python, LLMs, Kubernetes",
               "score": 95
-            }
-          ]' > backend/files/jobs.json
+            }]' > backend/files/jobs.json
 
-      # 7. Run real generation script (IMPORTANT)
       - name: Generate documents
         run: |
           cd backend
