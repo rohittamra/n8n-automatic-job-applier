@@ -70,6 +70,10 @@ jobs:
               }
             ]'
 
+      - name: Show jobs.json content
+        run: |
+          cat files/jobs.json
+
       - name: Commit changes
         run: |
           git config user.name "github-actions"
