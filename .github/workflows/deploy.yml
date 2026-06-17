@@ -63,16 +63,7 @@ jobs:
         run: |
           cd backend
 
-          python -c "
-            from services.profile_parser import parse_resume;
-            from ai.resume_generator import generate_resume;
-            from ai.cover_letter import generate_cover_letter;
-
-            profile = parse_resume()
-
-            print('Profile loaded')
-            print(profile[:200])
-            "
+          python -c "from services.profile_parser import parse_resume; from ai.resume_generator import generate_resume; from ai.cover_letter import generate_cover_letter; profile = parse_resume(); print('Profile loaded'); print(profile[:200]);"
 
       # 8. Save outputs safely
       - name: Ensure output exists
