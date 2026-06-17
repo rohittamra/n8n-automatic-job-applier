@@ -40,3 +40,24 @@ Job Description:
     )
 
     return response.output_text
+
+
+def structure_resume(text):
+
+    prompt = f"""
+Extract structured JSON from this resume:
+
+{text}
+
+Return:
+- skills
+- roles
+- experience
+- education
+- projects
+"""
+
+    return openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[{"role":"user","content":prompt}]
+    ).choices[0].message.content

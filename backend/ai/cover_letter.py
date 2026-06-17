@@ -5,35 +5,29 @@ client = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-
-def generate_cover_letter(
-    company,
-    role,
-    resume_text,
-    job_description
-):
+def generate_cover_letter(job, profile):
 
     prompt = f"""
-Create a professional cover letter.
+You are an expert technical recruiter.
 
-Company:
-{company}
+Generate a highly personalized cover letter.
 
-Role:
-{role}
+JOB:
+{job['description']}
 
-Resume:
-{resume_text}
+COMPANY:
+{job['company']}
 
-Job Description:
-{job_description}
+CANDIDATE PROFILE:
+{profile}
 
-Keep it under 350 words.
+Make it:
+- ATS optimized
+- specific to job
+- senior DevOps/Cloud tone
 """
 
-    response = client.responses.create(
-        model="gpt-5-mini",
-        input=prompt
-    )
-
-    return response.output_text
+    return openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[{"role":"user","content":prompt}]
+    ).choices[0].message.content

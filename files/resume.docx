@@ -1,0 +1,35 @@
+Rohit Tamra
+Blindengasse 38/20, 1080 Wien, Austria | engr.rohittamra@gmail.com | +43 688 64122452 |  https://www.linkedin.com/in/rohittamra/  https://github.com/rohittamra
+Work Experience
+Infosys AG - UBS AG (client), Zurich, Switzerland                                                                                                                    May 2018 -   Aug 2023
+Cloud Architect Engineer
+Served as an external infrastructure architect managing core deployment architectures for high-availability customer-facing retail banking applications as well as internal security networks.
+Designed multi-region public cloud topographies in Microsoft Azure and AWS, incorporating Azure Container Instances (ACI), Container Registries (ACR), Azure Load Balancers, Private DNS Zones, and AWS Route53.
+Implemented Kubernetes security controls including RBAC, network policies, namespace isolation, and secure container registries across 30+ production clusters, reducing container security exposure and improving compliance posture.
+Built and enhanced Kotlin-based backend solutions, integrating REST APIs, authentication mechanisms, and cloud-native deployment pipelines. Leveraged Kotlin for application development, automation tooling, and enterprise platform integrations within Kubernetes-based environments.
+Research Industrial Systems Engineering (RISE), Vienna, Austria                                                                                                  Sept 2023 - Present
+DevOps & Cloud Engineer
+Led a team of 7–8 engineers in designing, implementing, and securing cloud-native infrastructure, CI/CD pipelines, and Kubernetes platforms using Kafka, Jenkins, Ansible, supporting deployments for 200+ engineers and mission-critical enterprise applications.
+Engineered Infrastructure as Code (IaC) frameworks utilizing Terraform to automate the provisioning of cloud and on-premises infrastructure, successfully shrinking manual setup cycles by 80%.
+Architected and developed modular, reusable Terraform structures for Keycloak Identity & Access Management (IAM), ensuring highly secure, declarative user access definition across deployment bands.
+Company Profile: Core national healthcare IT infrastructure provider for the Austrian Health Information Exchange (HIE).
+Project: TIM (Secure Telematics Messenger for Doctors & Insurances)
+Built and optimized end-to-end GitLab CI/CD pipelines supporting 200+ engineers, reducing release cycle times by 65% while increasing deployment reliability.
+Deployed, optimized, and managed microservices directly onto bare-metal Kubernetes clusters, executing root-level cluster provisioning, kernel optimization, and high-availability lifecycle management.
+Standardized complex deployment lifecycles utilizing Helm and Helmfile, ensuring environmental repeatability and minimizing production release failure rates.
+Integrated automated security validation into CI/CD pipelines, enabling vulnerability detection before deployment and reducing production security findings by 40%.
+Spearheaded successful architectural Proof of Concepts (PoCs): IIntegrated Trivy container image scanning, SonarQube SAST analysis, and automated security gates into GitLab CI/CD pipelines, enabling detection of critical vulnerabilities before production deployment and reducing remediation effort by 50%.
+Configured custom Prometheus metrics and advanced Grafana alerting rules to enforce real-time auto-scaling, preserving maximum system throughput under fluctuating concurrent usage.
+Architected and built a centralized internal configuration and orchestration platform using React and internal APIs, empowering over 200 engineers to synchronize operations from a single pane of glass.
+Developed and maintained 100+ reusable Terraform modules, reducing infrastructure provisioning effort by 80% and standardizing deployments across development, QA, and production environments.
+Project: EPA (Electronic Patient Record Cluster Management) & Monitoring Services
+Company Profile: Leading global Swiss investment bank and financial services corporation.
+Skills & core COMPETENCIES
+AWS, Azure, Kubernetes (CKA), Bare-Metal Clusters, Helm, Helmfile, StatefulSets, DaemonSets, Route53, Private DNS, Trivy Scanning, SonarQube, Keycloak, HashiCorp Vault, Python Flask REST-APIs, Internal, Enterprise App Development (React), Terraform (Advanced Reusable Modules), Ansible, GitLab, Jenkins, GitHub Actions, Cloudformation, Prometheus & Grafana, MySQL, MongoDB, PostgreSQL, Docker, Jenkins, GitHub, Nexus, Subversion, , Podman , Kubernetes, Helm Charts, Helmfile, Kustomization, Sonarcube, A9Y registry, Hashicorp Eva Vault, Ansible vault, Grafana, Prometheus, OpenShift,  ArgoCD, Shell /Bash Scripting, Ionic 5 with Angular 8, React native.
+Summary
+Experienced DevOps & Infrastructure Engineer with 8+ years of experience delivering scalable cloud, Kubernetes, and Infrastructure-as-Code solutions across highly regulated banking and healthcare environments, reducing infrastructure provisioning time by up to 80%.
+EDUCATION
+Advance certification — Cloud, Blockchain & IoT Engineering                                                   Aug 2021 – Aug 2023
+Swami Keshvanand Institute of Technology, Management and Gramothan, Jaipur (RTU, Kota), Indian
+Bachelor of Technology (B.Tech.) — Computer Science & Engineering                                    May 2014 – May 2018
+Indian Institute of Technology (IIT), Madras | India

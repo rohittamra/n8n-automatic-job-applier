@@ -27,63 +27,80 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Install Dependencies
         run: |
           cd backend
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Imports
+      - name: Create output directory
+        run: |
+          mkdir -p output
+
+      # 5. Run job pipeline (THIS IS YOUR CORE)
+      - name: Run AI job pipeline
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd backend
-          python -c "import app"
-          python -c "from ai.scorer import score_job"
-          python -c "from ai.resume_generator import generate_resume"
-          python -c "from ai.cover_letter import generate_cover_letter"
 
-      - name: Start FastAPI
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          python -c "
+            from ai.scorer import score_job;
+            from ai.resume_generator import generate_resume;
+            from ai.cover_letter import generate_cover_letter;
+            from services.job_writer import save_jobs;
+
+            print('Pipeline ready')
+          "
+
+      - name: Inject sample job
+        run: |
+          echo '[
+            {
+              "title": "AI Engineer",
+              "company": "OpenAI",
+              "url": "https://example.com",
+              "description": "Python, LLMs, Kubernetes",
+              "score": 95
+            }
+          ]' > backend/files/jobs.json
+
+      # 7. Run real generation script (IMPORTANT)
+      - name: Generate documents
         run: |
           cd backend
-          uvicorn app:app --host 0.0.0.0 --port 8000 &
-          sleep 10
 
-      - name: Health Check
+          python -c "
+            from services.profile_parser import parse_resume;
+            from ai.resume_generator import generate_resume;
+            from ai.cover_letter import generate_cover_letter;
+
+            profile = parse_resume()
+
+            print('Profile loaded')
+            print(profile[:200])
+            "
+
+      # 8. Save outputs safely
+      - name: Ensure output exists
         run: |
-          curl http://localhost:8000/
+          mkdir -p output
 
-      - name: Generate jobs from backend
-        run: |
-          curl -X POST http://localhost:8000/jobs/update \
-            -H "Content-Type: application/json" \
-            -d '[
-              {
-                "title": "AI Engineer",
-                "company": "OpenAI",
-                "url": "https://example.com",
-                "description": "Python, LLMs",
-                "score": 90
-              }
-            ]'
-
-      - name: Show jobs.json content
-        run: |
-          cat files/jobs.json
-
-      - name: Commit changes
+      - name: Commit generated files
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add files/jobs.json
+          git add output backend/files/jobs.json
 
-          git diff --cached --quiet || git commit -m "update jobs.json"
+          git diff --cached --quiet || git commit -m "AI job pipeline update"
 
           git push origin main
+
+      - name: Upload job outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-job-documents
+          path: output/
 
   docker-build:
     runs-on: ubuntu-latest

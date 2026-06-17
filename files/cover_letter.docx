@@ -1,0 +1,17 @@
+Dear Hiring Manager,
+
+I am writing to express my interest in the {{ROLE}} position at {{COMPANY}}.
+
+With experience in {{SKILLS_MATCHED}}, I have built systems involving AI automation, backend APIs, and data-driven applications.
+
+In my recent work, I built:
+- AI-powered job matching system
+- Resume optimization engine
+- Workflow automation using n8n + FastAPI
+
+I am particularly excited about this role because {{REASON_CUSTOMIZED_BY_AI}}.
+
+I would welcome the opportunity to contribute to {{COMPANY}} and discuss how my skills align with your needs.
+
+Sincerely,
+{{NAME}}
