@@ -45,16 +45,16 @@ Job Description:
 def structure_resume(text):
 
     prompt = f"""
-    Extract structured JSON from this resume:
+Extract structured JSON from this resume:
 
-    {text}
+{text}
 
-    Return:
-    - skills
-    - roles
-    - experience
-    - education
-    - projects
+Return:
+- skills
+- roles
+- experience
+- education
+- projects
     """
 
     return openai.ChatCompletion.create(

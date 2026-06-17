@@ -42,14 +42,7 @@ jobs:
         run: |
           cd backend
 
-          python -c "
-            from ai.scorer import score_job;
-            from ai.resume_generator import generate_resume;
-            from ai.cover_letter import generate_cover_letter;
-            from services.job_writer import save_jobs;
-
-            print('Pipeline ready')
-          "
+          python -c "from ai.scorer import score_job; from ai.resume_generator import generate_resume; from ai.cover_letter import generate_cover_letter; from services.job_writer import save_jobs;"
 
       - name: Inject sample job
         run: |

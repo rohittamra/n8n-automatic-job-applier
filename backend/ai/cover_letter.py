@@ -8,23 +8,23 @@ client = OpenAI(
 def generate_cover_letter(job, profile):
 
     prompt = f"""
-    You are an expert technical recruiter.
+You are an expert technical recruiter.
 
-    Generate a highly personalized cover letter.
+Generate a highly personalized cover letter.
 
-    JOB:
-    {job['description']}
+JOB:
+{job['description']}
 
-    COMPANY:
-    {job['company']}
+COMPANY:
+{job['company']}
 
-    CANDIDATE PROFILE:
-    {profile}
+CANDIDATE PROFILE:
+{profile}
 
-    Make it:
-    - ATS optimized
-    - specific to job
-    - senior DevOps/Cloud tone
+Make it:
+- ATS optimized
+- specific to job
+- senior DevOps/Cloud tone
     """
 
     return openai.ChatCompletion.create(
