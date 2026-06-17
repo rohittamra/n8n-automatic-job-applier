@@ -10,22 +10,22 @@ client = OpenAI(
 def score_job(job_description: str, profile: str):
 
     prompt = f"""
-You are an expert recruiter.
+        You are an expert recruiter.
 
-Candidate Profile:
-{profile}
+        Candidate Profile:
+        {profile}
 
-Job Description:
-{job_description}
+        Job Description:
+        {job_description}
 
-Return JSON:
+        Return JSON:
 
-{{
-  "score": 0-100,
-  "reasons": [],
-  "missing_skills": []
-}}
-"""
+        {{
+        "score": 0-100,
+        "reasons": [],
+        "missing_skills": []
+        }}
+        """
 
     response = client.responses.create(
         model="gpt-5-mini",

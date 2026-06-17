@@ -36,7 +36,6 @@ jobs:
         run: |
           mkdir -p output
 
-      # 5. Run job pipeline (THIS IS YOUR CORE)
       - name: Run AI job pipeline
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
