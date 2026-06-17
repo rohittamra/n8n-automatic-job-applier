@@ -60,6 +60,8 @@ jobs:
           ]' > backend/files/jobs.json
 
       - name: Generate documents
+        env:
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd backend
 
