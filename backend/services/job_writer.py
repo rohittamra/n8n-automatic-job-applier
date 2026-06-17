@@ -1,25 +1,20 @@
-import json
 from pathlib import Path
+import json
+
+BASE_DIR = Path(__file__).resolve().parents[2]  # repo root
+
+FILE_PATH = BASE_DIR / "files" / "jobs.json"
 
 
-def save_jobs(jobs: list):
+def save_jobs(jobs):
 
-    path = Path("files/jobs.json")
-    path.parent.mkdir(exist_ok=True)
+    FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    existing = []
+    if FILE_PATH.exists():
+        existing = json.loads(FILE_PATH.read_text())
+    else:
+        existing = []
 
-    if path.exists():
-        try:
-            existing = json.loads(path.read_text())
-        except:
-            existing = []
+    existing.extend(jobs)
 
-    # merge + deduplicate by URL
-    seen = set(j["url"] for j in existing if "url" in j)
-
-    for job in jobs:
-        if job.get("url") not in seen:
-            existing.append(job)
-
-    path.write_text(json.dumps(existing, indent=2))
+    FILE_PATH.write_text(json.dumps(existing, indent=2))
