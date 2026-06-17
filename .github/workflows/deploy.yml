@@ -10,6 +10,9 @@ on:
     branches:
     - main
 
+permissions:
+  contents: write
+
 jobs:
 
   backend-check:
@@ -81,18 +84,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Required Files
+      - name: Ensure file exists
         run: |
           mkdir -p files
-          touch files/jobs.json
-
-          echo "Repository validation complete"
-
-      - name: Update timestamp in jobs.json
-        run: |
-          echo "Updating jobs.json timestamp"
-
-          jq '. + [{"updated_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"}]' files/jobs.json > tmp.json && mv tmp.json files/jobs.json
+          [ -f files/jobs.json ] || echo "[]" > files/jobs.json
 
       - name: Commit changes
         run: |
@@ -101,8 +96,6 @@ jobs:
 
           git add files/jobs.json
 
-          git diff --cached --quiet || git commit -m "update jobs.json [skip ci]"
+          git diff --cached --quiet || git commit -m "update jobs.json"
 
-      - name: Push changes
-        run: |
           git push origin main
