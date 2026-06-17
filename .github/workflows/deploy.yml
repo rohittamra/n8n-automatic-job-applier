@@ -24,13 +24,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: |
+      - name: Start API
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
           cd backend
+          uvicorn app:app --host 0.0.0.0 --port 8000 &
+          sleep 10
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - run: |
-          cd backend
           python -c "import app"
 
       - name: Verify imports
