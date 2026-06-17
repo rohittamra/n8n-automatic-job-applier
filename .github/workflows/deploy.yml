@@ -13,32 +13,28 @@ on:
 jobs:
 
   backend-check:
+
     runs-on: ubuntu-latest
+
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run backend
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python app.py
-
-      - name: Install dependencies
-        run: |
+      - run: |
           cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - run: |
+          cd backend
+          python -c "import app"
+
       - name: Verify imports
         run: |
-          cd backend
           python -c "from ai.scorer import score_job"
           python -c "from ai.resume_generator import generate_resume"
           python -c "from ai.cover_letter import generate_cover_letter"
