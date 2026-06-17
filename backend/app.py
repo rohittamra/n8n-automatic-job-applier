@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi import Body
+from services.job_writer import save_jobs
 
 from ai.scorer import score_job
 from ai.resume_generator import generate_resume
@@ -68,6 +70,10 @@ def cover_letter(request: CoverLetterRequest):
         )
     }
 
+@app.post("/jobs/update")
+def update_jobs(jobs: list = Body()):
+    save_jobs(jobs)
+    return {"status": "saved", "count": len(jobs)}
 
 @app.get("/")
 def root():

@@ -84,10 +84,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ensure file exists
+      - name: Generate jobs from backend
         run: |
-          mkdir -p files
-          [ -f files/jobs.json ] || echo "[]" > files/jobs.json
+          curl -X POST http://localhost:8000/jobs/update \
+            -H "Content-Type: application/json" \
+            -d '[
+              {
+                "title": "AI Engineer",
+                "company": "OpenAI",
+                "url": "https://example.com",
+                "description": "Python, LLMs",
+                "score": 90
+              }
+            ]'
 
       - name: Commit changes
         run: |
