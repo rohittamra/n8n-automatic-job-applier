@@ -17,36 +17,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Start API
+      - name: Install Dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify Imports
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          cd backend
+          python -c "import app"
+          python -c "from ai.scorer import score_job"
+          python -c "from ai.resume_generator import generate_resume"
+          python -c "from ai.cover_letter import generate_cover_letter"
+
+      - name: Start FastAPI
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           cd backend
           uvicorn app:app --host 0.0.0.0 --port 8000 &
           sleep 10
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          python -c "import app"
 
-      - name: Verify imports
+      - name: Health Check
         run: |
-          python -c "from ai.scorer import score_job"
-          python -c "from ai.resume_generator import generate_resume"
-          python -c "from ai.cover_letter import generate_cover_letter"
-
-      - name: Check project structure
-        run: |
-          test -f backend/app.py
-          test -f backend/ai/scorer.py
-          test -f backend/ai/resume_generator.py
-          test -f backend/ai/cover_letter.py
+          curl http://localhost:8000/
 
   docker-build:
     runs-on: ubuntu-latest
