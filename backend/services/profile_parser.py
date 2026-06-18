@@ -12,7 +12,13 @@ def parse_resume():
     if not file_path.exists():
         raise FileNotFoundError(f"Missing resume at {file_path}")
 
-    doc = Document(str(file_path))
+    try:
+        doc = Document(str(file_path))
+    except Exception as e:
+        raise ValueError(
+            f"Invalid DOCX file at {file_path}. "
+            "File may be corrupted or not a real .docx"
+        ) from e
 
     return "\n".join(
         p.text for p in doc.paragraphs if p.text.strip()
