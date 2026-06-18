@@ -1,10 +1,17 @@
 from docx import Document
+from pathlib import Path
 
 
 def parse_resume(path="files/resume.docx"):
 
-    doc = Document(path)
+    BASE_DIR = Path(__file__).resolve().parents[2]  # repo root
+    file_path = BASE_DIR / path
 
-    text = "\n".join([p.text for p in doc.paragraphs if p.text.strip()])
+    if not file_path.exists():
+        raise FileNotFoundError(f"Resume not found at {file_path}")
 
-    return text
+    doc = Document(str(file_path))
+
+    return "\n".join(
+        p.text for p in doc.paragraphs if p.text.strip()
+    )
