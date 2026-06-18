@@ -5,7 +5,7 @@ from docx import Document
 def parse_resume():
 
     ROOT = Path(__file__).resolve().parents[2]
-    file_path = ROOT / "files" / "resume.docx"
+    file_path = ROOT / ".." / "files" / "resume.docx"
 
     print("Looking for resume at:", file_path)
 
