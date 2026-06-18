@@ -1,14 +1,16 @@
-from docx import Document
 from pathlib import Path
+from docx import Document
 
 
-def parse_resume(path="files/resume.docx"):
+def parse_resume():
 
-    BASE_DIR = Path(__file__).resolve().parents[2]  # repo root
-    file_path = BASE_DIR / path
+    ROOT = Path(__file__).resolve().parents[2]
+    file_path = ROOT / "files" / "resume.docx"
+
+    print("Looking for resume at:", file_path)
 
     if not file_path.exists():
-        raise FileNotFoundError(f"Resume not found at {file_path}")
+        raise FileNotFoundError(f"Missing resume at {file_path}")
 
     doc = Document(str(file_path))
 
