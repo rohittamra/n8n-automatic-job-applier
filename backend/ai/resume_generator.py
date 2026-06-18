@@ -1,63 +1,37 @@
 from openai import OpenAI
-import os
+from services.document_service import write_docx
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+client = OpenAI()
 
 
-def generate_resume(
-    linkedin_profile,
-    current_resume,
-    job_description
-):
+def generate_resume(job, profile):
 
     prompt = f"""
-Create an ATS-friendly resume.
+Tailor this resume for the job.
 
-Rules:
+JOB:
+{job}
 
-- Keep everything truthful
-- Add job-relevant keywords
-- No tables
-- No graphics
-- Strong achievement bullets
-- ATS optimized
+PROFILE:
+{profile}
 
-LinkedIn Profile:
-{linkedin_profile}
-
-Current Resume:
-{current_resume}
-
-Job Description:
-{job_description}
+Return only resume text.
 """
 
     response = client.responses.create(
-        model="gpt-5",
+        model="gpt-5-mini",
         input=prompt
     )
 
-    return response.output_text
+    text = response.output_text
 
+    filename = (
+        f"resume_"
+        f"{job['company']}.docx"
+        .replace(" ", "_")
+    )
 
-def structure_resume(text):
-
-    prompt = f"""
-Extract structured JSON from this resume:
-
-{text}
-
-Return:
-- skills
-- roles
-- experience
-- education
-- projects
-    """
-
-    return openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[{"role":"user","content":prompt}]
-    ).choices[0].message.content
+    return write_docx(
+        filename,
+        text
+    )

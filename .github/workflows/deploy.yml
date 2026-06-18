@@ -15,83 +15,94 @@ permissions:
 
 jobs:
 
-  backend-check:
+  pipeline:
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install Dependencies
         run: |
           cd backend
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create output directory
+      - name: Verify Repository Structure
+        run: |
+          pwd
+          ls -R
+
+      - name: Verify Resume Exists
+        run: |
+          test -f files/resume.docx
+          echo "resume.docx found"
+
+      - name: Create Output Directory
         run: |
           mkdir -p output
 
-      - name: Run AI job pipeline
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Create Sample Jobs File
         run: |
-          cd backend
-
-          python -c "from ai.scorer import score_job; from ai.resume_generator import generate_resume; from ai.cover_letter import generate_cover_letter; from services.job_writer import save_jobs;"
-
-      - name: Inject sample job
-        run: |
-          mkdir -p backend/files
-          touch backend/files/jobs.json
-
-          echo '[
+          mkdir -p files
+          cat > files/jobs.json << 'EOF'
+          [
             {
               "title": "AI Engineer",
               "company": "OpenAI",
               "url": "https://example.com",
-              "description": "Python, LLMs, Kubernetes",
-              "score": 95
+              "description": "Python, LLMs, Kubernetes, AWS"
+            },
+            {
+              "title": "ML Engineer",
+              "company": "Example Corp",
+              "url": "https://example.com/ml",
+              "description": "Machine Learning, Docker, Python"
             }
-          ]' > backend/files/jobs.json
+          ]
+          EOF
 
-      - name: Generate documents
+      - name: Run AI Pipeline
         env:
-            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          JOB_SCORE_THRESHOLD: 75
         run: |
           cd backend
+          python run_pipeline.py
 
-          python -c "from services.profile_parser import parse_resume; from ai.resume_generator import generate_resume; from ai.cover_letter import generate_cover_letter; profile = parse_resume(); print('Profile loaded'); print(profile[:200]);"
-
-      # 8. Save outputs safely
-      - name: Ensure output exists
+      - name: Show Generated Files
         run: |
-          mkdir -p output
+          ls -lah output || true
 
-      - name: Commit generated files
+      - name: Commit Generated Artifacts
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add output backend/files/jobs.json
+          git add output
+          git add files/jobs.json
 
-          git diff --cached --quiet || git commit -m "AI job pipeline update"
+          git diff --cached --quiet || git commit -m "AI pipeline output update"
 
-          git push origin main
+          git push origin HEAD:${GITHUB_REF_NAME}
 
-      - name: Upload job outputs
+      - name: Upload Output Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ai-job-documents
+          name: ai-job-agent-output
           path: output/
-
   docker-build:
+
     runs-on: ubuntu-latest
-    needs: backend-check
+    needs: pipeline
+
     steps:
 
       - name: Checkout
@@ -104,6 +115,6 @@ jobs:
         run: |
           docker build -t ai-job-agent-backend ./backend
 
-      - name: Validate docker-compose
+      - name: Validate Docker Compose
         run: |
           docker compose config

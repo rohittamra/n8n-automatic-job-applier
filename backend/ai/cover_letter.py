@@ -1,33 +1,37 @@
 from openai import OpenAI
-import os
+from services.document_service import write_docx
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+client = OpenAI()
+
 
 def generate_cover_letter(job, profile):
 
     prompt = f"""
-You are an expert technical recruiter.
-
-Generate a highly personalized cover letter.
+Write a tailored cover letter.
 
 JOB:
-{job['description']}
+{job}
 
-COMPANY:
-{job['company']}
-
-CANDIDATE PROFILE:
+PROFILE:
 {profile}
 
-Make it:
-- ATS optimized
-- specific to job
-- senior DevOps/Cloud tone
-    """
+Return only the cover letter.
+"""
 
-    return openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[{"role":"user","content":prompt}]
-    ).choices[0].message.content
+    response = client.responses.create(
+        model="gpt-5-mini",
+        input=prompt
+    )
+
+    text = response.output_text
+
+    filename = (
+        f"cover_letter_"
+        f"{job['company']}.docx"
+        .replace(" ", "_")
+    )
+
+    return write_docx(
+        filename,
+        text
+    )
